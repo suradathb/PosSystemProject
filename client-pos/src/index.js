@@ -4,14 +4,14 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Login from './Login';
-import Register from './Register';
+import LayoutPos from './components/LayoutPos';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     {/* <App /> */}
-    <Login/>
-    {/* <Register /> */}
+    {/* <Login/> */}
+    <LayoutPos />
   </React.StrictMode>
 );
 
