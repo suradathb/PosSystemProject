@@ -1,11 +1,67 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./Header";
+import Axios from "axios";
+import axios from "axios";
+import moment from 'moment';
 
 function LayoutPos(props) {
+  const [data, setData] = useState([]);
+  const [id, setId] = useState(0);
+  const [itemname, setItemname] = useState("");
+  const [detail, setDetail] = useState("");
+  const [minimum, setMinimum] = useState("");
+  const [maximum, setMaximum] = useState("");
+  const [dateup, setDateup] = useState("");
+  const [count, setCount] = useState(0);
+  const [res,setRes] = useState("");
+
+  const getAPIStock = async () => {
+    const url =
+      "https://api.sheety.co/0704b338c342d7675872488f2adb2571/datastock/dataStock";
+    const res = await axios.get(url);
+    setCount(res.data.dataStock.length);
+    setData(res.data.dataStock);
+  };
+  const postData = (e) => {
+    e.preventDefault();
+    
+    let data = {
+      dataStock: {
+        id: count+1,
+        itemname: itemname,
+        detail: detail,
+        minimum: minimum,
+        maximum: maximum,
+        dateup: dateup,
+      },
+    };
+    console.log(data)
+    const url =
+      "https://api.sheety.co/0704b338c342d7675872488f2adb2571/datastock/dataStock";
+    axios.post(url, data).then((res) => {
+      if(res){
+        setRes(res);
+        alert("Data inserted successful!");
+      }else {
+        alert("Not Insert data to base");
+      }
+      
+    });
+  };
+  useEffect(() => {
+    getAPIStock();
+  }, [res]);
   return (
-    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-    data-sidebar-position="fixed" data-header-position="fixed">
-      <Header/>
+    <div
+      class="page-wrapper"
+      id="main-wrapper"
+      data-layout="vertical"
+      data-navbarbg="skin6"
+      data-sidebartype="full"
+      data-sidebar-position="fixed"
+      data-header-position="fixed"
+    >
+      <Header />
       <div class="body-wrapper">
         {/* <!--  Header Start --> */}
         <header class="app-header">
@@ -97,200 +153,12 @@ function LayoutPos(props) {
         {/* <!--  Header End --> */}
         <div class="container-fluid">
           {/* <!--  Row 1 --> */}
-          <div class="row">
-            <div class="col-lg-8 d-flex align-items-strech">
-              <div class="card w-100">
-                <div class="card-body">
-                  <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
-                    <div class="mb-3 mb-sm-0">
-                      <h5 class="card-title fw-semibold">Sales Overview</h5>
-                    </div>
-                    <div>
-                      <select class="form-select">
-                        <option value="1">March 2023</option>
-                        <option value="2">April 2023</option>
-                        <option value="3">May 2023</option>
-                        <option value="4">June 2023</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div id="chart"></div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4">
-              <div class="row">
-                <div class="col-lg-12">
-                  {/* <!-- Yearly Breakup --> */}
-                  <div class="card overflow-hidden">
-                    <div class="card-body p-4">
-                      <h5 class="card-title mb-9 fw-semibold">
-                        Yearly Breakup
-                      </h5>
-                      <div class="row align-items-center">
-                        <div class="col-8">
-                          <h4 class="fw-semibold mb-3">$36,358</h4>
-                          <div class="d-flex align-items-center mb-3">
-                            <span class="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
-                              <i class="ti ti-arrow-up-left text-success"></i>
-                            </span>
-                            <p class="text-dark me-1 fs-3 mb-0">+9%</p>
-                            <p class="fs-3 mb-0">last year</p>
-                          </div>
-                          <div class="d-flex align-items-center">
-                            <div class="me-4">
-                              <span class="round-8 bg-primary rounded-circle me-2 d-inline-block"></span>
-                              <span class="fs-2">2023</span>
-                            </div>
-                            <div>
-                              <span class="round-8 bg-light-primary rounded-circle me-2 d-inline-block"></span>
-                              <span class="fs-2">2023</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-4">
-                          <div class="d-flex justify-content-center">
-                            <div id="breakup"></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-12">
-                  {/* <!-- Monthly Earnings --> */}
-                  <div class="card">
-                    <div class="card-body">
-                      <div class="row alig n-items-start">
-                        <div class="col-8">
-                          <h5 class="card-title mb-9 fw-semibold">
-                            {" "}
-                            Monthly Earnings{" "}
-                          </h5>
-                          <h4 class="fw-semibold mb-3">$6,820</h4>
-                          <div class="d-flex align-items-center pb-1">
-                            <span class="me-2 rounded-circle bg-light-danger round-20 d-flex align-items-center justify-content-center">
-                              <i class="ti ti-arrow-down-right text-danger"></i>
-                            </span>
-                            <p class="text-dark me-1 fs-3 mb-0">+9%</p>
-                            <p class="fs-3 mb-0">last year</p>
-                          </div>
-                        </div>
-                        <div class="col-4">
-                          <div class="d-flex justify-content-end">
-                            <div class="text-white bg-secondary rounded-circle p-6 d-flex align-items-center justify-content-center">
-                              <i class="ti ti-currency-dollar fs-6"></i>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div id="earning"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-4 d-flex align-items-stretch">
-              <div class="card w-100">
-                <div class="card-body p-4">
-                  <div class="mb-4">
-                    <h5 class="card-title fw-semibold">Recent Transactions</h5>
-                  </div>
-                  <ul class="timeline-widget mb-0 position-relative mb-n5">
-                    <li class="timeline-item d-flex position-relative overflow-hidden">
-                      <div class="timeline-time text-dark flex-shrink-0 text-end">
-                        09:30
-                      </div>
-                      <div class="timeline-badge-wrap d-flex flex-column align-items-center">
-                        <span class="timeline-badge border-2 border border-primary flex-shrink-0 my-8"></span>
-                        <span class="timeline-badge-border d-block flex-shrink-0"></span>
-                      </div>
-                      <div class="timeline-desc fs-3 text-dark mt-n1">
-                        Payment received from John Doe of $385.90
-                      </div>
-                    </li>
-                    <li class="timeline-item d-flex position-relative overflow-hidden">
-                      <div class="timeline-time text-dark flex-shrink-0 text-end">
-                        10:00 am
-                      </div>
-                      <div class="timeline-badge-wrap d-flex flex-column align-items-center">
-                        <span class="timeline-badge border-2 border border-info flex-shrink-0 my-8"></span>
-                        <span class="timeline-badge-border d-block flex-shrink-0"></span>
-                      </div>
-                      <div class="timeline-desc fs-3 text-dark mt-n1 fw-semibold">
-                        New sale recorded{" "}
-                        <a
-                          href="javascript:void(0)"
-                          class="text-primary d-block fw-normal"
-                        >
-                          #ML-3467
-                        </a>
-                      </div>
-                    </li>
-                    <li class="timeline-item d-flex position-relative overflow-hidden">
-                      <div class="timeline-time text-dark flex-shrink-0 text-end">
-                        12:00 am
-                      </div>
-                      <div class="timeline-badge-wrap d-flex flex-column align-items-center">
-                        <span class="timeline-badge border-2 border border-success flex-shrink-0 my-8"></span>
-                        <span class="timeline-badge-border d-block flex-shrink-0"></span>
-                      </div>
-                      <div class="timeline-desc fs-3 text-dark mt-n1">
-                        Payment was made of $64.95 to Michael
-                      </div>
-                    </li>
-                    <li class="timeline-item d-flex position-relative overflow-hidden">
-                      <div class="timeline-time text-dark flex-shrink-0 text-end">
-                        09:30 am
-                      </div>
-                      <div class="timeline-badge-wrap d-flex flex-column align-items-center">
-                        <span class="timeline-badge border-2 border border-warning flex-shrink-0 my-8"></span>
-                        <span class="timeline-badge-border d-block flex-shrink-0"></span>
-                      </div>
-                      <div class="timeline-desc fs-3 text-dark mt-n1 fw-semibold">
-                        New sale recorded{" "}
-                        <a
-                          href="javascript:void(0)"
-                          class="text-primary d-block fw-normal"
-                        >
-                          #ML-3467
-                        </a>
-                      </div>
-                    </li>
-                    <li class="timeline-item d-flex position-relative overflow-hidden">
-                      <div class="timeline-time text-dark flex-shrink-0 text-end">
-                        09:30 am
-                      </div>
-                      <div class="timeline-badge-wrap d-flex flex-column align-items-center">
-                        <span class="timeline-badge border-2 border border-danger flex-shrink-0 my-8"></span>
-                        <span class="timeline-badge-border d-block flex-shrink-0"></span>
-                      </div>
-                      <div class="timeline-desc fs-3 text-dark mt-n1 fw-semibold">
-                        New arrival recorded
-                      </div>
-                    </li>
-                    <li class="timeline-item d-flex position-relative overflow-hidden">
-                      <div class="timeline-time text-dark flex-shrink-0 text-end">
-                        12:00 am
-                      </div>
-                      <div class="timeline-badge-wrap d-flex flex-column align-items-center">
-                        <span class="timeline-badge border-2 border border-success flex-shrink-0 my-8"></span>
-                      </div>
-                      <div class="timeline-desc fs-3 text-dark mt-n1">
-                        Payment Done
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-8 d-flex align-items-stretch">
+          <div className="row">
+            <div class="col-lg-12 d-flex align-items-stretch">
               <div class="card w-100">
                 <div class="card-body p-4">
                   <h5 class="card-title fw-semibold mb-4">
-                    Recent Transactions
+                    รายการ Stock สินค้า
                   </h5>
                   <div class="table-responsive">
                     <table class="table text-nowrap mb-0 align-middle">
@@ -300,108 +168,49 @@ function LayoutPos(props) {
                             <h6 class="fw-semibold mb-0">Id</h6>
                           </th>
                           <th class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">Assigned</h6>
+                            <h6 class="fw-semibold mb-0">สินค้า</h6>
                           </th>
                           <th class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">Name</h6>
+                            <h6 class="fw-semibold mb-0">รายละเอียด</h6>
                           </th>
                           <th class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">Priority</h6>
+                            <h6 class="fw-semibold mb-0">Minimum</h6>
                           </th>
                           <th class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">Budget</h6>
+                            <h6 class="fw-semibold mb-0">Maximum</h6>
+                          </th>
+                          <th class="border-bottom-0">
+                            <h6 class="fw-semibold mb-0">วันที่อัปเดต</h6>
                           </th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">1</h6>
-                          </td>
-                          <td class="border-bottom-0">
-                            <h6 class="fw-semibold mb-1">Sunil Joshi</h6>
-                            <span class="fw-normal">Web Designer</span>
-                          </td>
-                          <td class="border-bottom-0">
-                            <p class="mb-0 fw-normal">Elite Admin</p>
-                          </td>
-                          <td class="border-bottom-0">
-                            <div class="d-flex align-items-center gap-2">
-                              <span class="badge bg-primary rounded-3 fw-semibold">
-                                Low
-                              </span>
-                            </div>
-                          </td>
-                          <td class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0 fs-4">$3.9</h6>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">2</h6>
-                          </td>
-                          <td class="border-bottom-0">
-                            <h6 class="fw-semibold mb-1">Andrew McDownland</h6>
-                            <span class="fw-normal">Project Manager</span>
-                          </td>
-                          <td class="border-bottom-0">
-                            <p class="mb-0 fw-normal">Real Homes WP Theme</p>
-                          </td>
-                          <td class="border-bottom-0">
-                            <div class="d-flex align-items-center gap-2">
-                              <span class="badge bg-secondary rounded-3 fw-semibold">
-                                Medium
-                              </span>
-                            </div>
-                          </td>
-                          <td class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0 fs-4">$24.5k</h6>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">3</h6>
-                          </td>
-                          <td class="border-bottom-0">
-                            <h6 class="fw-semibold mb-1">Christopher Jamil</h6>
-                            <span class="fw-normal">Project Manager</span>
-                          </td>
-                          <td class="border-bottom-0">
-                            <p class="mb-0 fw-normal">MedicalPro WP Theme</p>
-                          </td>
-                          <td class="border-bottom-0">
-                            <div class="d-flex align-items-center gap-2">
-                              <span class="badge bg-danger rounded-3 fw-semibold">
-                                High
-                              </span>
-                            </div>
-                          </td>
-                          <td class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0 fs-4">$12.8k</h6>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">4</h6>
-                          </td>
-                          <td class="border-bottom-0">
-                            <h6 class="fw-semibold mb-1">Nirav Joshi</h6>
-                            <span class="fw-normal">Frontend Engineer</span>
-                          </td>
-                          <td class="border-bottom-0">
-                            <p class="mb-0 fw-normal">Hosting Press HTML</p>
-                          </td>
-                          <td class="border-bottom-0">
-                            <div class="d-flex align-items-center gap-2">
-                              <span class="badge bg-success rounded-3 fw-semibold">
-                                Critical
-                              </span>
-                            </div>
-                          </td>
-                          <td class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0 fs-4">$2.4k</h6>
-                          </td>
-                        </tr>
+                        {data?.map((stock) => {
+                          return (
+                            <tr key={stock.id}>
+                              <td class="border-bottom-0">
+                                <h6 class="fw-semibold mb-0">{stock.id}</h6>
+                              </td>
+                              <td class="border-bottom-0">
+                                <h6 class="fw-semibold mb-1">
+                                  {stock.itemname}
+                                </h6>
+                              </td>
+                              <td class="border-bottom-0">
+                                <p class="mb-0 fw-normal">{stock.detail}</p>
+                              </td>
+                              <td class="border-bottom-0">
+                                <p class="mb-0 fw-normal">{stock.minimum}</p>
+                              </td>
+                              <td class="border-bottom-0">
+                                <p class="mb-0 fw-normal">{stock.maximum}</p>
+                              </td>
+                              <td class="border-bottom-0">
+                                <p class="mb-0 fw-normal">{stock.dateup}</p>
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
@@ -409,245 +218,86 @@ function LayoutPos(props) {
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-sm-6 col-xl-3">
-              <div class="card overflow-hidden rounded-2">
-                <div class="position-relative">
-                  <a href="javascript:void(0)">
-                    <img
-                      src="../assets/images/products/s4.jpg"
-                      class="card-img-top rounded-0"
-                      alt="..."
+          <div class="card-body">
+            <h5 class="card-title fw-semibold mb-4">เพิ่ม Stock สินค้า</h5>
+            <div class="card">
+              <div class="card-body">
+                <form onSubmit={postData}>
+                  <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">
+                      ID
+                    </label>
+                    <input
+                      type="number"
+                      value={count + 1}
+                      onChange={(e) => setCount(e.target.value)}
+                      name="id"
+                      class="form-control"
+                      id="exampleInputEmail1"
+                      aria-describedby="emailHelp"
+                      readOnly
                     />
-                  </a>
-                  <a
-                    href="javascript:void(0)"
-                    class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="top"
-                    data-bs-title="Add To Cart"
-                  >
-                    <i class="ti ti-basket fs-4"></i>
-                  </a>{" "}
-                </div>
-                <div class="card-body pt-3 p-4">
-                  <h6 class="fw-semibold fs-4">Boat Headphone</h6>
-                  <div class="d-flex align-items-center justify-content-between">
-                    <h6 class="fw-semibold fs-4 mb-0">
-                      $50{" "}
-                      <span class="ms-2 fw-normal text-muted fs-3">
-                        <del>$65</del>
-                      </span>
-                    </h6>
-                    <ul class="list-unstyled d-flex align-items-center mb-0">
-                      <li>
-                        <a class="me-1" href="javascript:void(0)">
-                          <i class="ti ti-star text-warning"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a class="me-1" href="javascript:void(0)">
-                          <i class="ti ti-star text-warning"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a class="me-1" href="javascript:void(0)">
-                          <i class="ti ti-star text-warning"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a class="me-1" href="javascript:void(0)">
-                          <i class="ti ti-star text-warning"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a class="" href="javascript:void(0)">
-                          <i class="ti ti-star text-warning"></i>
-                        </a>
-                      </li>
-                    </ul>
                   </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-6 col-xl-3">
-              <div class="card overflow-hidden rounded-2">
-                <div class="position-relative">
-                  <a href="javascript:void(0)">
-                    <img
-                      src="../assets/images/products/s5.jpg"
-                      class="card-img-top rounded-0"
-                      alt="..."
+                  <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">
+                      ชื่อสินค้า
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleInputPassword1"
+                      onChange={(e) => setItemname(e.target.value)}
                     />
-                  </a>
-                  <a
-                    href="javascript:void(0)"
-                    class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="top"
-                    data-bs-title="Add To Cart"
-                  >
-                    <i class="ti ti-basket fs-4"></i>
-                  </a>{" "}
-                </div>
-                <div class="card-body pt-3 p-4">
-                  <h6 class="fw-semibold fs-4">MacBook Air Pro</h6>
-                  <div class="d-flex align-items-center justify-content-between">
-                    <h6 class="fw-semibold fs-4 mb-0">
-                      $650{" "}
-                      <span class="ms-2 fw-normal text-muted fs-3">
-                        <del>$900</del>
-                      </span>
-                    </h6>
-                    <ul class="list-unstyled d-flex align-items-center mb-0">
-                      <li>
-                        <a class="me-1" href="javascript:void(0)">
-                          <i class="ti ti-star text-warning"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a class="me-1" href="javascript:void(0)">
-                          <i class="ti ti-star text-warning"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a class="me-1" href="javascript:void(0)">
-                          <i class="ti ti-star text-warning"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a class="me-1" href="javascript:void(0)">
-                          <i class="ti ti-star text-warning"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a class="" href="javascript:void(0)">
-                          <i class="ti ti-star text-warning"></i>
-                        </a>
-                      </li>
-                    </ul>
                   </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-6 col-xl-3">
-              <div class="card overflow-hidden rounded-2">
-                <div class="position-relative">
-                  <a href="javascript:void(0)">
-                    <img
-                      src="../assets/images/products/s7.jpg"
-                      class="card-img-top rounded-0"
-                      alt="..."
+                  <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">
+                      รายละเอียด
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleInputPassword1"
+                      onChange={(e) => setDetail(e.target.value)}
                     />
-                  </a>
-                  <a
-                    href="javascript:void(0)"
-                    class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="top"
-                    data-bs-title="Add To Cart"
-                  >
-                    <i class="ti ti-basket fs-4"></i>
-                  </a>{" "}
-                </div>
-                <div class="card-body pt-3 p-4">
-                  <h6 class="fw-semibold fs-4">Red Valvet Dress</h6>
-                  <div class="d-flex align-items-center justify-content-between">
-                    <h6 class="fw-semibold fs-4 mb-0">
-                      $150{" "}
-                      <span class="ms-2 fw-normal text-muted fs-3">
-                        <del>$200</del>
-                      </span>
-                    </h6>
-                    <ul class="list-unstyled d-flex align-items-center mb-0">
-                      <li>
-                        <a class="me-1" href="javascript:void(0)">
-                          <i class="ti ti-star text-warning"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a class="me-1" href="javascript:void(0)">
-                          <i class="ti ti-star text-warning"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a class="me-1" href="javascript:void(0)">
-                          <i class="ti ti-star text-warning"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a class="me-1" href="javascript:void(0)">
-                          <i class="ti ti-star text-warning"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a class="" href="javascript:void(0)">
-                          <i class="ti ti-star text-warning"></i>
-                        </a>
-                      </li>
-                    </ul>
                   </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-6 col-xl-3">
-              <div class="card overflow-hidden rounded-2">
-                <div class="position-relative">
-                  <a href="javascript:void(0)">
-                    <img
-                      src="../assets/images/products/s11.jpg"
-                      class="card-img-top rounded-0"
-                      alt="..."
+                  <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">
+                      Minimum
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleInputPassword1"
+                      onChange={(e) => setMinimum(e.target.value)}
                     />
-                  </a>
-                  <a
-                    href="javascript:void(0)"
-                    class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="top"
-                    data-bs-title="Add To Cart"
-                  >
-                    <i class="ti ti-basket fs-4"></i>
-                  </a>{" "}
-                </div>
-                <div class="card-body pt-3 p-4">
-                  <h6 class="fw-semibold fs-4">Cute Soft Teddybear</h6>
-                  <div class="d-flex align-items-center justify-content-between">
-                    <h6 class="fw-semibold fs-4 mb-0">
-                      $285{" "}
-                      <span class="ms-2 fw-normal text-muted fs-3">
-                        <del>$345</del>
-                      </span>
-                    </h6>
-                    <ul class="list-unstyled d-flex align-items-center mb-0">
-                      <li>
-                        <a class="me-1" href="javascript:void(0)">
-                          <i class="ti ti-star text-warning"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a class="me-1" href="javascript:void(0)">
-                          <i class="ti ti-star text-warning"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a class="me-1" href="javascript:void(0)">
-                          <i class="ti ti-star text-warning"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a class="me-1" href="javascript:void(0)">
-                          <i class="ti ti-star text-warning"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a class="" href="javascript:void(0)">
-                          <i class="ti ti-star text-warning"></i>
-                        </a>
-                      </li>
-                    </ul>
                   </div>
-                </div>
+                  <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">
+                      Maximum
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleInputPassword1"
+                      onChange={(e) => setMaximum(e.target.value)}
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">
+                      วันที่อัปเดต
+                    </label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="exampleInputPassword1"
+                      // onChange={(e) => setDateup(e.target.value)}
+                      onChange={(e) => setDateup(moment(e.target.value,'YYYY-MM-DD').format('DD/MM/YYYY'))}
+                    />
+                  </div>
+                  <button type="submit" class="btn btn-primary">
+                    Submit
+                  </button>
+                </form>
               </div>
             </div>
           </div>
