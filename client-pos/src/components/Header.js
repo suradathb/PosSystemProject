@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Header(props) {
   return (
@@ -29,16 +30,28 @@ function Header(props) {
                 <span className="hide-menu">Home</span>
               </li>
               <li className="sidebar-item">
-                <a
+                <Link
                   className="sidebar-link"
-                  href="./index.html"
+                  to="/"
                   aria-expanded="false"
                 >
                   <span>
                     <i className="ti ti-layout-dashboard"></i>
                   </span>
                   <span className="hide-menu">Dashboard</span>
-                </a>
+                </Link>
+              </li>
+              <li className="sidebar-item">
+                <Link
+                  className="sidebar-link"
+                  to="/aminusers"
+                  aria-expanded="false"
+                >
+                  <span>
+                    <i className="ti ti-layout-dashboard"></i>
+                  </span>
+                  <span className="hide-menu">Users</span>
+                </Link>
               </li>
               <li className="nav-small-cap">
                 <i className="ti ti-dots nav-small-cap-icon fs-4"></i>
