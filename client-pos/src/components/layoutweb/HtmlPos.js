@@ -12,7 +12,7 @@ const HtmlPos  = ({ children }) => {
           <div className="container-fluid page-body-wrapper">
             <HeaderLeft />
             <div className="main-panel">
-              <div class="content-wrapper">
+              <div className="content-wrapper">
                 {children}
               </div>
               <Footer />

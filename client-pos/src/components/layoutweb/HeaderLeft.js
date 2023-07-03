@@ -1,12 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import './HeaderLeft.css';
 
 class HeaderLeft extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-
-    }
+    this.state = {};
   }
 
   componentDidMount() {}
@@ -21,12 +20,16 @@ class HeaderLeft extends React.Component {
           <div id="theme-settings" className="settings-panel">
             <i className="settings-close typcn typcn-times"></i>
             <p className="settings-heading">SIDEBAR SKINS</p>
-            <div className="sidebar-bg-options selected" id="sidebar-light-theme">
+            <div
+              className="sidebar-bg-options selected"
+              id="sidebar-light-theme"
+            >
               <div className="img-ss rounded-circle bg-light border mr-3"></div>
               Light
             </div>
             <div className="sidebar-bg-options" id="sidebar-dark-theme">
-              <div className="img-ss rounded-circle bg-dark border mr-3"></div>Dark
+              <div className="img-ss rounded-circle bg-dark border mr-3"></div>
+              Dark
             </div>
             <p className="settings-heading mt-2">HEADER SKINS</p>
             <div className="color-tiles mx-0 px-4">
@@ -125,7 +128,7 @@ class HeaderLeft extends React.Component {
                   <li className="completed">
                     <div className="form-check">
                       <label className="form-check-label">
-                        <input className="checkbox" type="checkbox" checked />
+                        <input className="checkbox" type="checkbox" defaultChecked={true} />
                         Schedule meeting for next week
                       </label>
                     </div>
@@ -134,7 +137,7 @@ class HeaderLeft extends React.Component {
                   <li className="completed">
                     <div className="form-check">
                       <label className="form-check-label">
-                        <input className="checkbox" type="checkbox" checked />
+                        <input className="checkbox" type="checkbox" defaultChecked={true} />
                         Project review
                       </label>
                     </div>
@@ -181,7 +184,10 @@ class HeaderLeft extends React.Component {
               <ul className="chat-list">
                 <li className="list active">
                   <div className="profile">
-                    <img src="images/faces/face1.jpg" alt="image" />
+                    <img
+                      src="./assets/images/faces/face1.jpg"
+                      alt="Smiling child playing"
+                    />
                     <span className="online"></span>
                   </div>
                   <div className="info">
@@ -192,7 +198,10 @@ class HeaderLeft extends React.Component {
                 </li>
                 <li className="list">
                   <div className="profile">
-                    <img src="images/faces/face2.jpg" alt="image" />
+                    <img
+                      src="./assets/images/faces/face2.jpg"
+                      alt="Smiling child playing"
+                    />
                     <span className="offline"></span>
                   </div>
                   <div className="info">
@@ -208,7 +217,10 @@ class HeaderLeft extends React.Component {
                 </li>
                 <li className="list">
                   <div className="profile">
-                    <img src="images/faces/face3.jpg" alt="image" />
+                    <img
+                      src="./assets/images/faces/face3.jpg"
+                      alt="Smiling child playing"
+                    />
                     <span className="online"></span>
                   </div>
                   <div className="info">
@@ -219,7 +231,10 @@ class HeaderLeft extends React.Component {
                 </li>
                 <li className="list">
                   <div className="profile">
-                    <img src="images/faces/face4.jpg" alt="image" />
+                    <img
+                      src="./assets/images/faces/face4.jpg"
+                      alt="Smiling child playing"
+                    />
                     <span className="offline"></span>
                   </div>
                   <div className="info">
@@ -230,7 +245,10 @@ class HeaderLeft extends React.Component {
                 </li>
                 <li className="list">
                   <div className="profile">
-                    <img src="images/faces/face5.jpg" alt="image" />
+                    <img
+                      src="./assets/images/faces/face5.jpg"
+                      alt="Smiling child playing"
+                    />
                     <span className="online"></span>
                   </div>
                   <div className="info">
@@ -241,7 +259,10 @@ class HeaderLeft extends React.Component {
                 </li>
                 <li className="list">
                   <div className="profile">
-                    <img src="images/faces/face6.jpg" alt="image" />
+                    <img
+                      src="./assets/images/faces/face6.jpg"
+                      alt="Smiling child playing"
+                    />
                     <span className="online"></span>
                   </div>
                   <div className="info">
@@ -260,49 +281,11 @@ class HeaderLeft extends React.Component {
         <nav className="sidebar sidebar-offcanvas" id="sidebar">
           <ul className="nav">
             <li className="nav-item">
-              <Link className="nav-link" to='/'>
+              <Link className="nav-link" to="/">
                 <i className="typcn typcn-device-desktop menu-icon"></i>
                 <span className="menu-title">Dashboard</span>
                 <div className="badge badge-danger">new</div>
               </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                className="nav-link"
-                data-toggle="collapse"
-                to='/'
-                aria-expanded="false"
-                aria-controls="ui-basic"
-              >
-                <i className="typcn typcn-document-text menu-icon"></i>
-                <span className="menu-title">UI Elements</span>
-                <i className="menu-arrow"></i>
-              </Link>
-              <div className="collapse" id="ui-basic">
-                <ul className="nav flex-column sub-menu">
-                  <li className="nav-item">
-                    {" "}
-                    <a className="nav-link" href="pages/ui-features/buttons.html">
-                      Buttons
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    {" "}
-                    <a className="nav-link" href="pages/ui-features/dropdowns.html">
-                      Dropdowns
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    {" "}
-                    <a
-                      className="nav-link"
-                      href="pages/ui-features/typography.html"
-                    >
-                      Typography
-                    </a>
-                  </li>
-                </ul>
-              </div>
             </li>
             <li className="nav-item">
               <a
@@ -313,13 +296,16 @@ class HeaderLeft extends React.Component {
                 aria-controls="form-elements"
               >
                 <i className="typcn typcn-film menu-icon"></i>
-                <span className="menu-title">Form elements</span>
+                <span className="menu-title">Product</span>
                 <i className="menu-arrow"></i>
               </a>
               <div className="collapse" id="form-elements">
                 <ul className="nav flex-column sub-menu">
-                  <li className="nav-item">
-                    <a className="nav-link" href="pages/forms/basic_elements.html">
+                  <li className="nav-item ok">
+                    <a
+                      className="nav-link"
+                      href="pages/forms/basic_elements.html"
+                    >
                       Basic Elements
                     </a>
                   </li>
@@ -365,7 +351,10 @@ class HeaderLeft extends React.Component {
                 <ul className="nav flex-column sub-menu">
                   <li className="nav-item">
                     {" "}
-                    <a className="nav-link" href="pages/tables/basic-table.html">
+                    <a
+                      className="nav-link"
+                      href="pages/tables/basic-table.html"
+                    >
                       Basic table
                     </a>
                   </li>
@@ -411,17 +400,17 @@ class HeaderLeft extends React.Component {
                 <ul className="nav flex-column sub-menu">
                   <li className="nav-item">
                     {" "}
-                    <a className="nav-link" href="pages/samples/login.html">
+                    <Link className="nav-link" to='/login'>
                       {" "}
                       Login{" "}
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
                     {" "}
-                    <a className="nav-link" href="pages/samples/register.html">
+                    <Link className="nav-link" to='/register'>
                       {" "}
                       Register{" "}
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -442,17 +431,17 @@ class HeaderLeft extends React.Component {
                 <ul className="nav flex-column sub-menu">
                   <li className="nav-item">
                     {" "}
-                    <a className="nav-link" href="pages/samples/error-404.html">
+                    <Link className="nav-link" to="/404">
                       {" "}
                       404{" "}
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
                     {" "}
-                    <a className="nav-link" href="pages/samples/error-500.html">
+                    <Link className="nav-link" to="/500">
                       {" "}
                       500{" "}
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
