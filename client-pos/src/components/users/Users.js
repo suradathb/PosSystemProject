@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { createItem, updateItem } from "../../apis/PosApiUsersSeting";
-import Header from "../Header";
 
 class Users extends Component {
   constructor(props) {

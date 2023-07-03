@@ -1,5 +1,4 @@
 import React from "react";
-import Header from "../Header";
 import axios from "axios";
 import Users from "./Users";
 import { fetchUsers } from "../../apis/PosApiUsersSeting";
@@ -37,7 +36,6 @@ class UserView extends React.Component {
         data-sidebar-position="fixed"
         data-header-position="fixed"
       >
-        <Header />
         <div class="body-wrapper">
           {/* <!--  Header Start --> */}
           <header class="app-header">
