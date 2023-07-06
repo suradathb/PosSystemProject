@@ -64,27 +64,24 @@ class ReservationSystem extends React.Component {
       "https://api.sheety.co/0704b338c342d7675872488f2adb2571/reservation/list";
     try {
       const response = await axios.post(url, reservation).then((res) => {
-        // console.log(res);
+        if (res.status === 200) {
+          // Fetch updated reservations from the API and update state
+          this.fetchReservations();
+          // Clear the form fields
+          this.setState({
+            no: 0,
+            name: "",
+            email: "",
+            date: "",
+            time: "",
+            table: "",
+            seats: "",
+            locations: "",
+          });
+        } else {
+          console.log("Failed to save reservation.");
+        }
       });
-      // console.log(response); // Log the response object to check the server's response
-      if (response.data) {
-        // Fetch updated reservations from the API and update state
-        this.fetchReservations();
-
-        // Clear the form fields
-        this.setState({
-          no: 0,
-          name: "",
-          email: "",
-          date: "",
-          time: "",
-          table: "",
-          seats: "",
-          locations: "",
-        });
-      } else {
-        console.log("Failed to save reservation.");
-      }
     } catch (error) {
       console.log("Error saving reservation", error);
     }
@@ -108,6 +105,24 @@ class ReservationSystem extends React.Component {
             <td>{reservation.table}</td>
             <td>{reservation.seats}</td>
             <td>{reservation.locations}</td>
+            <td>
+              <div className="d-flex align-items-center">
+                <button
+                  type="button"
+                  className="btn btn-success btn-sm btn-icon-text mr-3"
+                >
+                  Edit
+                  <i className="typcn typcn-edit btn-icon-append"></i>
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger btn-sm btn-icon-text"
+                >
+                  Delete
+                  <i className="typcn typcn-delete-outline btn-icon-append"></i>
+                </button>
+              </div>
+            </td>
           </tr>
         ))}
       </>
@@ -272,6 +287,7 @@ class ReservationSystem extends React.Component {
                           <th>Table</th>
                           <th>Seats</th>
                           <th>Locations</th>
+                          <th></th>
                         </tr>
                       </thead>
                       <tbody>{this.renderReservations()}</tbody>

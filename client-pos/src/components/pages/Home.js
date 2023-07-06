@@ -24,10 +24,10 @@ class Home extends React.Component {
                   <form className="form-sample">
                     <p className="card-description">รายการ Order In-process </p>
                     <div className="col-md-12 btn-dash">
-                      <button type="submit" class="btn btn-primary mr-2">
+                      <button type="submit" className="btn btn-primary mr-2">
                         Submit
                       </button>
-                      <button class="btn btn-light">Cancel</button>
+                      <button className="btn btn-light">Cancel</button>
                     </div>
                     <div className="col-md-12">
                       <div className="card">
