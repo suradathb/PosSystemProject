@@ -302,12 +302,12 @@ class HeaderLeft extends React.Component {
               <div className="collapse" id="form-elements">
                 <ul className="nav flex-column sub-menu">
                   <li className="nav-item ok">
-                    <a
+                    <Link
                       className="nav-link"
-                      href="pages/forms/basic_elements.html"
+                      to='/reservation'
                     >
                       Basic Elements
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
