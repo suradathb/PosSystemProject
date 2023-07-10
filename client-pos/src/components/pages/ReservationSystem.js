@@ -2,6 +2,14 @@ import React from "react";
 import axios from "axios";
 import HtmlPos from "../layoutweb/HtmlPos";
 
+// Helper function to format date as "dd/mm/yyyy"
+function formatDate(date) {
+  const year = date.getFullYear().toString();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 class ReservationSystem extends React.Component {
   constructor(props) {
     super(props);
@@ -15,121 +23,220 @@ class ReservationSystem extends React.Component {
       seats: "",
       locations: "",
       reservations: [],
+      isEditing: false,
+      editingReservationId: null,
     };
   }
 
   componentDidMount() {
     this.fetchReservations();
   }
+
   fetchReservations = async () => {
     try {
-      const response = await fetch(
+      const response = await axios.get(
         "https://api.sheety.co/0704b338c342d7675872488f2adb2571/reservation/list"
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch reservations");
-      }
-      const reservations = await response.json();
-      // console.log(reservations.list.length);
       this.setState({
-        reservations: reservations.list,
-        no: reservations.list.length,
+        reservations: response.data.list,
+        no: response.data.list.length,
       });
     } catch (error) {
       console.log("Error fetching reservations:", error);
     }
   };
+
   handleChange = (e) => {
     const { name, value } = e.target;
-    this.setState({ [name]: value });
+    if (name === "date") {
+      const selectedDate = new Date(value);
+      const formattedDate = formatDate(selectedDate);
+      this.setState({ date: formattedDate });
+    } else {
+      this.setState({ [name]: value });
+    }
   };
-  handleSubmit = async (e) => {
-    e.preventDefault();
-    let no = this.state.no + 1;
-    const { name, email, date, time, table, seats, locations } = this.state;
-    const reservation = {
-      list: {
-        no,
-        name,
-        email,
-        date,
-        time,
-        table,
-        seats,
-        locations,
-      },
-    };
-    const url =
-      "https://api.sheety.co/0704b338c342d7675872488f2adb2571/reservation/list";
+
+  handleCreateClick = () => {
+    this.setState({
+      isEditing: true,
+      editingReservationId: null,
+      name: "",
+      email: "",
+      date: "",
+      time: "",
+      table: "",
+      seats: "",
+      locations: "",
+    });
+  };
+
+  handleEditClick = (id) => {
+    const { reservations } = this.state;
+    const reservationToEdit = reservations.find(
+      (reservation) => reservation.id === id
+    );
+    console.log(reservationToEdit);
+    this.setState({
+      isEditing: true,
+      editingReservationId: id,
+      name: reservationToEdit.name,
+      email: reservationToEdit.email,
+      date: reservationToEdit.date,
+      time: reservationToEdit.time,
+      table: reservationToEdit.table,
+      seats: reservationToEdit.seats,
+      locations: reservationToEdit.locations,
+    });
+  };
+
+  handleDeleteClick = async (id) => {
+    const { reservations } = this.state;
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this reservation?"
+    );
+
+    if (!confirmed) return;
+
     try {
-      const response = await axios.post(url, reservation).then((res) => {
-        if (res.status === 200) {
-          // Fetch updated reservations from the API and update state
-          this.fetchReservations();
-          // Clear the form fields
-          this.setState({
-            no: 0,
-            name: "",
-            email: "",
-            date: "",
-            time: "",
-            table: "",
-            seats: "",
-            locations: "",
-          });
-        } else {
-          console.log("Failed to save reservation.");
-        }
+      await axios.delete(
+        `https://api.sheety.co/0704b338c342d7675872488f2adb2571/reservation/list/${id}`
+      );
+
+      const updatedReservations = reservations.filter(
+        (reservation) => reservation.id !== id
+      );
+
+      this.setState({
+        reservations: updatedReservations,
       });
     } catch (error) {
-      console.log("Error saving reservation", error);
+      console.log("Error deleting reservation:", error);
+    }
+  };
+
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    const {
+      isEditing,
+      editingReservationId,
+      name,
+      email,
+      date,
+      time,
+      table,
+      seats,
+      locations,
+      reservations,
+    } = this.state;
+
+    const newReservation = {
+      name,
+      email,
+      date,
+      time,
+      table,
+      seats,
+      locations,
+    };
+
+    try {
+      if (isEditing) {
+        await axios.put(
+          `https://api.sheety.co/0704b338c342d7675872488f2adb2571/reservation/list/${editingReservationId}`,
+          newReservation
+        );
+
+        const updatedReservations = reservations.map((reservation) =>
+          reservation.id === editingReservationId
+            ? { id: editingReservationId, ...newReservation }
+            : reservation
+        );
+
+        this.setState({
+          isEditing: false,
+          editingReservationId: null,
+          name: "",
+          email: "",
+          date: "",
+          time: "",
+          table: "",
+          seats: "",
+          locations: "",
+          reservations: updatedReservations,
+        });
+      } else {
+        const response = await axios.post(
+          "https://api.sheety.co/0704b338c342d7675872488f2adb2571/reservation/list",
+          newReservation
+        );
+
+        const createdReservation = {
+          id: response.data.id,
+          ...newReservation,
+        };
+
+        this.setState((prevState) => ({
+          no: prevState.no + 1,
+          reservations: [...prevState.reservations, createdReservation],
+          name: "",
+          email: "",
+          date: "",
+          time: "",
+          table: "",
+          seats: "",
+          locations: "",
+        }));
+      }
+    } catch (error) {
+      console.log("Error saving reservation:", error);
     }
   };
 
   renderReservations = () => {
     const { reservations } = this.state;
-    if (reservations === null) {
+    console.log(reservations)
+    if (reservations.length === 0) {
       return <p>No reservations available.</p>;
     }
 
-    return (
-      <>
-        {reservations.map((reservation) => (
-          <tr key={reservation.id}>
-            <td>{reservation.no}</td>
-            <td>{reservation.name}</td>
-            <td>{reservation.email}</td>
-            <td>{reservation.date}</td>
-            <td>{reservation.time}</td>
-            <td>{reservation.table}</td>
-            <td>{reservation.seats}</td>
-            <td>{reservation.locations}</td>
-            <td>
-              <div className="d-flex align-items-center">
-                <button
-                  type="button"
-                  className="btn btn-success btn-sm btn-icon-text mr-3"
-                >
-                  Edit
-                  <i className="typcn typcn-edit btn-icon-append"></i>
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-danger btn-sm btn-icon-text"
-                >
-                  Delete
-                  <i className="typcn typcn-delete-outline btn-icon-append"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        ))}
-      </>
-    );
+    return reservations.map((reservation) => (
+      <tr key={reservation.id}>
+        <td>{reservation.no}</td>
+        <td>{reservation.name}</td>
+        <td>{reservation.email}</td>
+        <td>{reservation.date}</td>
+        <td>{reservation.time}</td>
+        <td>{reservation.table}</td>
+        <td>{reservation.seats}</td>
+        <td>{reservation.locations}</td>
+        <td>
+          <div className="d-flex align-items-center">
+            <button
+              type="button"
+              className="btn btn-success btn-sm btn-icon-text mr-3"
+              onClick={() => this.handleEditClick(reservation.id)}
+            >
+              Edit
+              <i className="typcn typcn-edit btn-icon-append"></i>
+            </button>
+            <button
+              type="button"
+              className="btn btn-danger btn-sm btn-icon-text"
+              onClick={() => this.handleDeleteClick(reservation.id)}
+            >
+              Delete
+              <i className="typcn typcn-delete-outline btn-icon-append"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    ));
   };
+
   render() {
-    const { name, email, date, time, table, seats, locations } = this.state;
+    const { name, email, date, time, table, seats, locations, isEditing } = this.state;
 
     return (
       <HtmlPos>
@@ -148,7 +255,7 @@ class ReservationSystem extends React.Component {
                             type="text"
                             className="form-control"
                             name="name"
-                            value={name}
+                            value={name || ""}
                             onChange={this.handleChange}
                             required
                           />
@@ -163,7 +270,7 @@ class ReservationSystem extends React.Component {
                             type="email"
                             className="form-control"
                             name="email"
-                            value={email}
+                            value={email || ""}
                             onChange={this.handleChange}
                             required
                           />
@@ -180,7 +287,7 @@ class ReservationSystem extends React.Component {
                             type="date"
                             className="form-control"
                             name="date"
-                            value={date}
+                            value={date ? formatDate(new Date(date)) : ""}
                             onChange={this.handleChange}
                             required
                           />
@@ -195,7 +302,7 @@ class ReservationSystem extends React.Component {
                             type="time"
                             className="form-control"
                             name="time"
-                            value={time}
+                            value={time || ""}
                             onChange={this.handleChange}
                             required
                           />
@@ -212,7 +319,7 @@ class ReservationSystem extends React.Component {
                             type="text"
                             className="form-control"
                             name="table"
-                            value={table}
+                            value={table || ""}
                             onChange={this.handleChange}
                             required
                           />
@@ -227,7 +334,7 @@ class ReservationSystem extends React.Component {
                             type="text"
                             className="form-control"
                             name="seats"
-                            value={seats}
+                            value={seats || ""}
                             onChange={this.handleChange}
                             required
                           />
@@ -246,7 +353,7 @@ class ReservationSystem extends React.Component {
                             type="text"
                             className="form-control"
                             name="locations"
-                            value={locations}
+                            value={locations || ""}
                             onChange={this.handleChange}
                             required
                           />
@@ -260,16 +367,19 @@ class ReservationSystem extends React.Component {
                           type="submit"
                           className="btn btn-success btn-sm btn-icon-text mr-3"
                         >
-                          Save
+                          {isEditing ? "Update" : "Save"}
                           <i className="typcn typcn-edit btn-icon-append"></i>
                         </button>
-                        <button
-                          type="button"
-                          className="btn btn-danger btn-sm btn-icon-text"
-                        >
-                          Cancel
-                          <i className="typcn typcn-delete-outline btn-icon-append"></i>
-                        </button>
+                        {isEditing && (
+                          <button
+                            type="button"
+                            className="btn btn-danger btn-sm btn-icon-text"
+                            onClick={this.handleCancelClick}
+                          >
+                            Cancel
+                            <i className="typcn typcn-delete-outline btn-icon-append"></i>
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
