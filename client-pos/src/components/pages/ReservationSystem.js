@@ -22,6 +22,7 @@ class ReservationSystem extends React.Component {
       table: "",
       seats: "",
       locations: "",
+      phone:"",
       reservations: [],
       isEditing: false,
       editingReservationId: null,
@@ -35,12 +36,12 @@ class ReservationSystem extends React.Component {
   fetchReservations = async () => {
     try {
       const response = await axios.get(
-        "https://api.sheety.co/0704b338c342d7675872488f2adb2571/reservation/list"
+        "http://localhost:5000/api/v1/reservation"
       );
-
+      // console.log(response.data)
       this.setState({
-        reservations: response.data.list,
-        no: response.data.list.length,
+        reservations: response.data,
+        no: response.data.length,
       });
     } catch (error) {
       console.log("Error fetching reservations:", error);
@@ -69,6 +70,7 @@ class ReservationSystem extends React.Component {
       table: "",
       seats: "",
       locations: "",
+      phone :""
     });
   };
 
@@ -77,7 +79,6 @@ class ReservationSystem extends React.Component {
     const reservationToEdit = reservations.find(
       (reservation) => reservation.id === id
     );
-    console.log(reservationToEdit);
     this.setState({
       isEditing: true,
       editingReservationId: id,
@@ -88,6 +89,7 @@ class ReservationSystem extends React.Component {
       table: reservationToEdit.table,
       seats: reservationToEdit.seats,
       locations: reservationToEdit.locations,
+      phone : reservationToEdit.phone,
     });
   };
 
@@ -101,7 +103,7 @@ class ReservationSystem extends React.Component {
 
     try {
       await axios.delete(
-        `https://api.sheety.co/0704b338c342d7675872488f2adb2571/reservation/list/${id}`
+        `http://localhost:5000/api/v1/reservation/${id}`
       );
 
       const updatedReservations = reservations.filter(
@@ -129,6 +131,7 @@ class ReservationSystem extends React.Component {
       seats,
       locations,
       reservations,
+      phone,
     } = this.state;
 
     const newReservation = {
@@ -139,12 +142,13 @@ class ReservationSystem extends React.Component {
       table,
       seats,
       locations,
+      phone,
     };
 
     try {
       if (isEditing) {
         await axios.put(
-          `https://api.sheety.co/0704b338c342d7675872488f2adb2571/reservation/list/${editingReservationId}`,
+          `http://localhost:5000/api/v1/reservation/${editingReservationId}`,
           newReservation
         );
 
@@ -164,11 +168,12 @@ class ReservationSystem extends React.Component {
           table: "",
           seats: "",
           locations: "",
+          phone:"",
           reservations: updatedReservations,
         });
       } else {
         const response = await axios.post(
-          "https://api.sheety.co/0704b338c342d7675872488f2adb2571/reservation/list",
+          "http://localhost:5000/api/v1/reservation",
           newReservation
         );
 
@@ -187,6 +192,7 @@ class ReservationSystem extends React.Component {
           table: "",
           seats: "",
           locations: "",
+          phone:"",
         }));
       }
     } catch (error) {
@@ -196,14 +202,13 @@ class ReservationSystem extends React.Component {
 
   renderReservations = () => {
     const { reservations } = this.state;
-    console.log(reservations)
     if (reservations.length === 0) {
       return <p>No reservations available.</p>;
     }
 
     return reservations.map((reservation) => (
       <tr key={reservation.id}>
-        <td>{reservation.no}</td>
+        <td>{reservation.id}</td>
         <td>{reservation.name}</td>
         <td>{reservation.email}</td>
         <td>{reservation.date}</td>
@@ -211,6 +216,7 @@ class ReservationSystem extends React.Component {
         <td>{reservation.table}</td>
         <td>{reservation.seats}</td>
         <td>{reservation.locations}</td>
+        <td>{reservation.phone}</td>
         <td>
           <div className="d-flex align-items-center">
             <button
@@ -236,7 +242,7 @@ class ReservationSystem extends React.Component {
   };
 
   render() {
-    const { name, email, date, time, table, seats, locations, isEditing } = this.state;
+    const { name, email, date, time, table, seats, locations,phone, isEditing } = this.state;
 
     return (
       <HtmlPos>
@@ -362,6 +368,25 @@ class ReservationSystem extends React.Component {
                     </div>
                     <div className="col-md-6">
                       <div className="form-group row">
+                        <label className="col-sm-3 col-form-label">
+                          Phone
+                        </label>
+                        <div className="col-sm-9">
+                          <input
+                            type="text"
+                            className="form-control"
+                            name="phone"
+                            value={phone || ""}
+                            onChange={this.handleChange}
+                            required
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                    <div className="row">
+                    <div className="col-md-6">
+                      <div className="form-group row">
                         <label className="col-sm-3 col-form-label"></label>
                         <button
                           type="submit"
@@ -397,6 +422,7 @@ class ReservationSystem extends React.Component {
                           <th>Table</th>
                           <th>Seats</th>
                           <th>Locations</th>
+                          <th>Phone</th>
                           <th></th>
                         </tr>
                       </thead>
