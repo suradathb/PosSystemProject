@@ -5,7 +5,9 @@ import Error404 from './components/error/Error404';
 import Error500 from './components/error/Error500';
 import Login from './Login';
 import Register from './Register';
-import ReservationSystem from './components/pages/ReservationSystem';
+import ReservationSystem from './components/pages/Reservation/ReservationSystem';
+import ReservationView from './components/pages/Reservation/ReservationView';
+import SettingTable from './components/pages/Reservation/SettingTable';
 
 
 
@@ -27,7 +29,9 @@ class App extends React.Component {
         <Route path='/500' element={<Error500/>}/>
         <Route path='/login' element={<Login/>}/>
         <Route path='/register' element={<Register/>}/>
+        <Route path='/resview' element={<ReservationView/>}/>
         <Route path='/reservation' element={<ReservationSystem/>}/>
+        <Route path='/settingres' element={<SettingTable/>}/>
         {/* <Route path='/aminusers' element={<UserView/>}/> */}
       </Routes>
     );

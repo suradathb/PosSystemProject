@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import './HeaderLeft.css';
+import { PosMenuString } from "../../setings/PosMenuString";
 
 class HeaderLeft extends React.Component {
   constructor(props) {
@@ -282,8 +283,8 @@ class HeaderLeft extends React.Component {
           <ul className="nav">
             <li className="nav-item">
               <Link className="nav-link" to="/">
-                <i className="typcn typcn-device-desktop menu-icon"></i>
-                <span className="menu-title">Dashboard</span>
+                <i className="mdi mdi-cart menu-icon"></i>
+                <span className="menu-title">{PosMenuString.Pos_Setup_Menu_Orders}</span>
                 <div className="badge badge-danger">new</div>
               </Link>
             </li>
@@ -295,18 +296,34 @@ class HeaderLeft extends React.Component {
                 aria-expanded="false"
                 aria-controls="form-elements"
               >
-                <i className="typcn typcn-film menu-icon"></i>
-                <span className="menu-title">Product</span>
+                <i className="mdi mdi-book-open-page-variant menu-icon"></i>
+                <span className="menu-title">{PosMenuString.Pos_Setup_Menu_Reservation}</span>
                 <i className="menu-arrow"></i>
               </a>
               <div className="collapse" id="form-elements">
                 <ul className="nav flex-column sub-menu">
-                  <li className="nav-item ok">
+                  <li className="nav-item">
+                    <Link
+                      className="nav-link"
+                      to="/resview"
+                    >
+                     {PosMenuString.Pos_Setup_Menu_Queue}
+                    </Link>
+                  </li>
+                  <li className="nav-item">
                     <Link
                       className="nav-link"
                       to='/reservation'
                     >
-                      Basic Elements
+                      {PosMenuString.Pos_Setup_Menu_ReTable}
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link
+                      className="nav-link"
+                      to='/settingres'
+                    >
+                      {PosMenuString.Pos_Setup_Menu_Table}
                     </Link>
                   </li>
                 </ul>
